@@ -1,0 +1,12 @@
+{
+  "name": "vntu-tutorial",
+  "version": "1.0.0",
+  "description": "vntu tutorial",
+  "scripts": {},
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "watchify": ">=2.1.1"
+  },
+  "dependencies": {
+  }
+}
