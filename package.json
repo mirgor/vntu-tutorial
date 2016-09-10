@@ -5,8 +5,7 @@
   "scripts": {},
   "devDependencies": {
     "gulp": "^3.9.0",
-    "watchify": ">=2.1.1"
+    "gulp-server-livereload": "^1.8.4"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
