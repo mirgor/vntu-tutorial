@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vntu tutorial</title>
+    <title>Green Reminder</title>
 
     <base href="/"/>
 
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" -->
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
+    
 </head>
 <body ng-app="MainApp">
 <!-- Fixed navbar -->
@@ -23,32 +26,74 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Bootstrap theme</a>
+            <span id="brand"><a class="navbar-brand text-success" href="#" ><i class="fa fa-bell"></i> Green Reminder</a></span>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+            <ul class="nav navbar-nav  pull-right">
+                <li class="active"><a href="#values">Values List</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-
+<div class="clearfix"></div>
 <div class="container" role="main" ng-controller="MainController">
+    <div ng-controller="StoreController as store" class="row">
+
+        <div  ng-repeat="parameter in store.data track by parameter.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 " >
+            <h3>{{parameter.name}}
+                <button class="btn btn-default pull-right" type="button" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="toggleGraph.actived = !toggleGraph.actived">
+                    <i class="fa fa-bar-chart"></i>
+                </button>
+            </h3>
+            <hr>
+
+            <div ng-class="{true: 'hidden', false: 'visible'}[!toggleGraph.actived]">
+                <div class="row">
+                    <div class="col-lg-12">
+                        ssss
+                    </div>
+                </div>
+            </div>
+            <div ng-class="{true: 'visible', false: 'hidden'}[!toggleGraph.actived]">
+                <div class="row" >
+                    <div class="col-lg-12" ng-class="{true: 'visible', false: 'hidden'}[!addAction.actived]" >
+                        <span class="pull-left">минуло {{dayToCurrentDate}} днів</span>
+                        <button type="button" class="btn pull-right" ng-click="addAction.actived = true"><i class="fa fa-plus"></i> Додати</button>
+                    </div>
+                </div>
+                <div class="input-group " ng-class="{true: 'hidden', false: 'visible'}[!addAction.actived]">
+                    <input type="text" class="form-control" placeholder="_____.00">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" ng-click="addAction.actived = false" type="button">Записати</button>
+                        <button class="btn btn-danger" ng-click="addAction.actived = false" type="button" ><i class="fa fa-times"></i></button>
+                    </span>
+                </div>
+                <br/>
+                <!-- measurements history  -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p ng-repeat="measurement in (correctParameters = (parameter.measurements | orderBy: parameter.measurements.daytime | date )) | limitTo: 5" >
+                            {{measurement.daytime  | date:'dd.MM.yyyy'}}: <mark>{{measurement.value}}</mark>
+                            <span ng-if="$index == 0">{{dayToCurrent(measurement.daytime)}}</span>
+
+                            <span class="pull-right text-muted">
+                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) > 0"> +</span>
+                                {{(measurement.value - correctParameters[$index - 1].value) | number:1}}
+                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) > (correctParameters[$index - 1].value - correctParameters[$index - 2].value)">
+                                    <i class="fa fa-caret-up fa-lg text-danger" title="витрати зросли"></i>
+                                </span>
+                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) < (correctParameters[$index - 1].value - correctParameters[$index - 2].value)">
+                                    <i class="fa fa-caret-down fa-lg text-success" title="витрати зменшились"></i>
+                                </span>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
@@ -67,10 +112,31 @@
         <button type="button" ng-click="setAnswer('Yes')" class="btn btn-lg btn-success">Yes</button>
     </p>
 
+    <hr>
+
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Dropdown
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+        </ul>
+    </div>
+
+    <hr>
+
 </div> <!-- /container -->
 
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js "></script>
 <script src="app/main.js"></script>
 </body>
 </html>
