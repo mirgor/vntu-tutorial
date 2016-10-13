@@ -51,7 +51,7 @@
             <div ng-class="{true: 'hidden', false: 'visible'}[!toggleGraph.actived]">
                 <div class="row">
                     <div class="col-lg-12">
-                        ssss
+                        тут будет график
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="input-group " ng-class="{true: 'hidden', false: 'visible'}[!addAction.actived]">
-                    <input type="text" class="form-control" placeholder="_____.00">
+                    <input type="text" class="form-control" placeholder="_____.00" value="{{}}">
                     <span class="input-group-btn">
                         <button class="btn btn-success" ng-click="addAction.actived = false" type="button">Записати</button>
                         <button class="btn btn-danger" ng-click="addAction.actived = false" type="button" ><i class="fa fa-times"></i></button>
@@ -112,21 +112,6 @@
         <button type="button" ng-click="setAnswer('Yes')" class="btn btn-lg btn-success">Yes</button>
     </p>
 
-    <hr>
-
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            Dropdown
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-        </ul>
-    </div>
 
     <hr>
 
