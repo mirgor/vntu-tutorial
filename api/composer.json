@@ -1,0 +1,12 @@
+{
+    "name": "aslubsky/vntu-tutorial",
+    "require": {
+        "slim/slim": "^3.5"
+    },
+    "authors": [
+        {
+            "name": "Alex Slubsky",
+            "email": "aslubsky@gmail.com"
+        }
+    ]
+}
