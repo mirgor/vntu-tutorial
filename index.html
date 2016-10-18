@@ -9,10 +9,12 @@
     <base href="/"/>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/c3.css" rel="stylesheet" type="text/css">
     <!-- link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" -->
+    <!-- link href="bower_components/c3/c3.min.css" rel="stylesheet" type="text/css" -->
     <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
-    
+
 </head>
 <body ng-app="MainApp">
 <!-- Fixed navbar -->
@@ -37,12 +39,13 @@
     </div>
 </nav>
 <div class="clearfix"></div>
-<div class="container" role="main" ng-controller="MainController">
-    <div ng-controller="StoreController as store" class="row">
+<div class="container" role="main">
+    <div ng-controller="StoreController" class="row">
 
-        <div  ng-repeat="parameter in store.data track by parameter.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 " >
+        <div  ng-repeat="parameter in parameters track by parameter.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 " >
             <h3>{{parameter.name}}
-                <button class="btn btn-default pull-right" type="button" data-toggle="button" aria-pressed="false" autocomplete="off" ng-click="toggleGraph.actived = !toggleGraph.actived">
+                <button class="btn btn-default pull-right" type="button" data-toggle="button" aria-pressed="false" autocomplete="off"
+                        ng-click="toggleGraph.actived = !toggleGraph.actived">
                     <i class="fa fa-bar-chart"></i>
                 </button>
             </h3>
@@ -51,45 +54,51 @@
             <div ng-class="{true: 'hidden', false: 'visible'}[!toggleGraph.actived]">
                 <div class="row">
                     <div class="col-lg-12">
-                        тут будет график
+                        <div my-chart chart-data="parameter"></div>
                     </div>
                 </div>
             </div>
+
             <div ng-class="{true: 'visible', false: 'hidden'}[!toggleGraph.actived]">
-                <div class="row" >
+                <div class="row" ng-class="{true: 'hidden', false: 'visible'}[parameter.$edit]">
                     <div class="col-lg-12" ng-class="{true: 'visible', false: 'hidden'}[!addAction.actived]" >
-                        <span class="pull-left">минуло {{dayToCurrentDate}} днів</span>
-                        <button type="button" class="btn pull-right" ng-click="addAction.actived = true"><i class="fa fa-plus"></i> Додати</button>
+                        <span class="pull-left"><small>Останній запис {{dayToCurrentDate(parameter)}}</small></span>
+                        <button type="button" class="btn pull-right" ng-click="parameter.$edit = true"><i class="fa fa-plus"></i> Додати</button>
                     </div>
                 </div>
-                <div class="input-group " ng-class="{true: 'hidden', false: 'visible'}[!addAction.actived]">
-                    <input type="text" class="form-control" placeholder="_____.00" value="{{}}">
+
+                <div class="input-group " ng-class="{true: 'hidden', false: 'visible'}[!parameter.$edit]">
+                    <form name="myForm">
+                        <input type="text" class="form-control" ng-keyup="$event.keyCode == 13 && addMeasurement(parameter)" ng-model="parameter.newvalue" placeholder="_____.00" value="{{}}">
+                    </form>
                     <span class="input-group-btn">
-                        <button class="btn btn-success" ng-click="addAction.actived = false" type="button">Записати</button>
-                        <button class="btn btn-danger" ng-click="addAction.actived = false" type="button" ><i class="fa fa-times"></i></button>
+                        <button  class="btn btn-success" ng-disabled="!parameter.newvalue.length" ng-click="addMeasurement(parameter)" type="button">Записати</button>
+                        <button class="btn btn-danger" ng-click="parameter.$edit = false" type="button" ><i class="fa fa-times"></i></button>
                     </span>
                 </div>
+
                 <br/>
                 <!-- measurements history  -->
                 <div class="row">
                     <div class="col-lg-12">
-                        <p ng-repeat="measurement in (correctParameters = (parameter.measurements | orderBy: parameter.measurements.daytime | date )) | limitTo: 5" >
+                        <p ng-repeat="measurement in (correctParameters = (parameter.measurements | orderBy: parameter.measurements.daytime | date )) | limitTo: 6" >
                             {{measurement.daytime  | date:'dd.MM.yyyy'}}: <mark>{{measurement.value}}</mark>
                             <span ng-if="$index == 0">{{dayToCurrent(measurement.daytime)}}</span>
 
-                            <span class="pull-right text-muted">
-                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) > 0"> +</span>
-                                {{(measurement.value - correctParameters[$index - 1].value) | number:1}}
-                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) > (correctParameters[$index - 1].value - correctParameters[$index - 2].value)">
+                            <span class="pull-right text-muted" ng-class="{true: 'hidden', false: 'visible'}[$last]">
+                                <span ng-if="measurement.delta > 0"> +</span>
+                                {{measurement.delta | number:2}}
+                                <span ng-if="measurement.delta > correctParameters[$index + 1].delta">
                                     <i class="fa fa-caret-up fa-lg text-danger" title="витрати зросли"></i>
                                 </span>
-                                <span ng-if="(measurement.value - correctParameters[$index - 1].value) < (correctParameters[$index - 1].value - correctParameters[$index - 2].value)">
+                                <span ng-if="measurement.delta <= correctParameters[$index + 1].delta">
                                     <i class="fa fa-caret-down fa-lg text-success" title="витрати зменшились"></i>
                                 </span>
                             </span>
                         </p>
                     </div>
                 </div>
+              
                 <br/>
             </div>
         </div>
@@ -110,18 +119,43 @@
         <button type="button" ng-click="setAnswer('May be')" class="btn btn-lg btn-default">May be</button>
         <button type="button" ng-click="setAnswer('No')" class="btn btn-lg btn-danger">No</button>
         <button type="button" ng-click="setAnswer('Yes')" class="btn btn-lg btn-success">Yes</button>
+        <button type="button" ng-click="getPosts()" class="btn btn-lg btn-primary">get posts</button>
     </p>
+
 
 
     <hr>
 
+    <ul ng-if="posts">
+        <li ng-repeat="post in posts">
+            <h2>#{{post.id}}</h2>
+            <div>#{{post.name}}</div>
+        </li>
+    </ul>
+
+    Hello, today is <?php echo "nm,,n,n"; ?>.
+
 </div> <!-- /container -->
 
 <script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/moment/min/moment-with-locales.min.js"></script>
 <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    
+<script src="bower_components/d3/d3.js" charset="utf-8"></script>
+<script src="bower_components/c3/c3.js"></script>
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js "></script>
 <script src="app/main.js"></script>
+
+<!-- Initialize and draw the chart -->
+<script type="text/javascript">
+    
+</script>
+
+<!--<script src="app/models/PostModel.js"></script>-->
+<!--<script src="app/controllers/MainCtrl.js"></script>-->
+
 </body>
 </html>
