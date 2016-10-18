@@ -4,3 +4,6 @@ body {
 #brand a{
     color:greenyellow;
 }
+.frame-parametr{
+min-height: 450px;
+}

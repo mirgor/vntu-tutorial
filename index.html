@@ -39,10 +39,10 @@
     </div>
 </nav>
 <div class="clearfix"></div>
-<div class="container" role="main">
-    <div ng-controller="StoreController" class="row">
+<div class="container" role="main" ng-controller="StoreController" >
+    <div class="row">
 
-        <div  ng-repeat="parameter in parameters track by parameter.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 " >
+        <div  ng-repeat="parameter in parameters track by parameter.id" class="col-lg-4 col-md-4 col-sm-6 col-xs-12 frame-parametr" >
             <h3>{{parameter.name}}
                 <button class="btn btn-default pull-right" type="button" data-toggle="button" aria-pressed="false" autocomplete="off"
                         ng-click="toggleGraph.actived = !toggleGraph.actived">
