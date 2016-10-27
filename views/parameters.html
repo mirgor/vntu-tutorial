@@ -1,0 +1,14 @@
+<h1>
+    Parameters.
+</h1>
+
+<div class="container" role="main" ng-controller="ParametersController" >
+<button type="button" ng-click="getPosts()" class="btn btn-lg btn-primary">get posts</button>
+<ul ng-if="posts">
+        <li ng-repeat="post in posts">
+            <h2>#{{post.id}}</h2>
+            <div>#{{post.name}}</div>
+        </li>
+    </ul>
+
+</div>

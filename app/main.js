@@ -1,29 +1,27 @@
-var mainApp = angular.module('MainApp', ['ngResource']);
+function router ($routeProvider) {
+  $routeProvider
+  .when('/', {
+      templateUrl: 'views/main.html'
+  })
+  .when('/parameters', {
+      templateUrl: 'views/parameters.html'
+  })
+  .when('/about', {
+      templateUrl: 'views/about.html'
+  })
+  .when('/aslubsky', {
+      templateUrl: 'views/aslubsky.html'
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
+}
 
-mainApp.factory('PostModel', ['$resource', function ($resource) {
-    return $resource('http://localhost:8088/api/rest.php/posts/:id', {'id': '@id'}, {});
-}]);
 
-mainApp.controller('MainController', ['$scope', 'PostModel', function($scope, PostModel) {
-    $scope.answer = ' - ';
+var mainApp = angular
+    .module('MainApp', ['ngResource', 'ngRoute'])
+    .config(router);
 
-    $scope.setAnswer = function(answer) {
-        $scope.answer = answer;
-    };
-    
-    $scope.getPosts = function (answer) {
-        PostModel.get(function(res) {
-            console.log('res', res.data);
-            $scope.posts = res.data;
-        });
-    };
-    
-    $scope.saveValue = function(value){
-        
-    };
-
-        
-}]);
 
 dataPrepare = function(parameters){
     
@@ -101,6 +99,7 @@ mainApp.directive('myChart', [function(){
     };
 }]);
 
+//------------------------------------------------------------------------
 mainApp.controller('StoreController',['$scope', function($scope){
     var data2;
     
@@ -161,7 +160,6 @@ mainApp.controller('StoreController',['$scope', function($scope){
         return $c;
     };
 
-
     $scope.addMeasurement = function(parameter){
         var curDaytime;
         curDaytime = moment().format('YYYY-MM-DD');
@@ -181,4 +179,55 @@ mainApp.controller('StoreController',['$scope', function($scope){
         parameter.newvalue = 0;
         parameter.$edit = false;
     }
+}]);
+
+    // values list
+
+mainApp.factory('PostModelParameters', ['$resource', function ($resource) {
+    return $resource('http://localhost:8088/api/rest-parameters.php/posts/:id', {'id': '@id'}, {});
+}]);
+    
+mainApp.controller('ParametersController', ['$scope', 'PostModel', function($scope, PostModel) {
+    $scope.answer = ' - ';
+
+    $scope.setAnswer = function(answer) {
+        $scope.answer = answer;
+    };
+    
+    $scope.getPosts = function (answer) {
+        PostModel.get(function(res) {
+            console.log('res', res.data);
+            $scope.posts = res.data;
+        });
+    };
+    
+    $scope.saveValue = function(value){
+        
+    };
+}]);
+    // aslubsky example
+
+mainApp.factory('PostModel', ['$resource', function ($resource) {
+    return $resource('http://localhost:8088/api/rest.php/posts/:id', {'id': '@id'}, {});
+}]);
+
+mainApp.controller('MainController', ['$scope', 'PostModel', function($scope, PostModel) {
+    $scope.answer = ' - ';
+
+    $scope.setAnswer = function(answer) {
+        $scope.answer = answer;
+    };
+    
+    $scope.getPosts = function (answer) {
+        PostModel.get(function(res) {
+            console.log('res', res.data);
+            $scope.posts = res.data;
+        });
+    };
+    
+    $scope.saveValue = function(value){
+        
+    };
+
+        
 }]);

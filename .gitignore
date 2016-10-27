@@ -2,3 +2,5 @@ node_modules/
 bower_components/
 .idea/
 build
+/api/vendor
+/api/composer.lock
