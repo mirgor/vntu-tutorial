@@ -4,10 +4,12 @@
 
 <div class="container" role="main" ng-controller="ParametersController" >
 <button type="button" ng-click="getPosts()" class="btn btn-lg btn-primary">get posts</button>
-<ul ng-if="posts">
-        <li ng-repeat="post in posts">
-            <h2>#{{post.id}}</h2>
-            <div>#{{post.name}}</div>
+<p>{{rows.data.length}}</p>
+<ul ng-if="rows">
+        <li ng-repeat="row in rows.data">
+            <dt>#{{row.id}}</dt>
+            <dd>#{{row.name}}</dd>
+            
         </li>
     </ul>
 

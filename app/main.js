@@ -184,20 +184,21 @@ mainApp.controller('StoreController',['$scope', function($scope){
     // values list
 
 mainApp.factory('PostModelParameters', ['$resource', function ($resource) {
-    return $resource('http://localhost:8088/api/rest-parameters.php/posts/:id', {'id': '@id'}, {});
+    return $resource('http://localhost:8088/api/rest-parameters.php/test/:id', {'id': '@id'}, {});
 }]);
     
-mainApp.controller('ParametersController', ['$scope', 'PostModel', function($scope, PostModel) {
+mainApp.controller('ParametersController', ['$scope', 'PostModelParameters', function($scope, PostModelParameters) {
     $scope.answer = ' - ';
 
     $scope.setAnswer = function(answer) {
+        console.log('setAnswer', res.data);
         $scope.answer = answer;
     };
     
     $scope.getPosts = function (answer) {
-        PostModel.get(function(res) {
-            console.log('res', res.data);
-            $scope.posts = res.data;
+        PostModelParameters.get(function(res) {
+            console.log('res: ', res);
+            $scope.rows = res;
         });
     };
     
@@ -205,6 +206,7 @@ mainApp.controller('ParametersController', ['$scope', 'PostModel', function($sco
         
     };
 }]);
+    
     // aslubsky example
 
 mainApp.factory('PostModel', ['$resource', function ($resource) {
@@ -220,7 +222,7 @@ mainApp.controller('MainController', ['$scope', 'PostModel', function($scope, Po
     
     $scope.getPosts = function (answer) {
         PostModel.get(function(res) {
-            console.log('res', res.data);
+            console.log('res = = ', res.data);
             $scope.posts = res.data;
         });
     };
