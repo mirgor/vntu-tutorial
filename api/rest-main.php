@@ -21,23 +21,20 @@ $app->add(function ($req, $res, $next) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
-$app->post('/test/[{id}]', function ($request, $response, $args) {
-        $input = $request->getParsedBody();
-        
-        // $sql = "UPDATE tasks SET task=:task WHERE id=:id";
-         // $sth = $this->db->prepare($sql);
-        // $sth->bindParam("id", $args['id']);
-        // $sth->bindParam("task", $input['task']);
-        // $sth->execute();
-        // $input['id'] = $args['id'];
-        return $this->response->withJson($input);
-    });
-
 $app->get('/test', function (Request $request, Response $response) {
     $params = DB::fetchAll('SELECT * FROM `params`');
+    //print_r('<br>');
     foreach ($params as &$p) {
         $measurements = DB::fetchAll('SELECT * FROM `measurements` WHERE id_param = ' . $p['id']);
         $p['measurements'] = $measurements;
+        // foreach ($measurements as &$m) {
+            // $p['measurements']['id'] = $m['id'];
+            // $p['measurements']['daytime'] = $m['daytime'];
+            // $p['measurements']['value'] = $m['value'];
+            // //print_r ( 'p: ' . $p['id'] . ' - m: ' . $m['id'] . ' - ' . $p['measurements']['value'] . '  <br> ');
+            
+        // }
+        // unset($m);
     }
     unset($p);
     $response->getBody()->write(json_encode([

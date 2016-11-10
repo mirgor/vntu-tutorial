@@ -1,16 +1,40 @@
-<h1>
-    Parameters.
-</h1>
+<div class="container" role="main" ng-controller="parametersController" ng-init="getParameters()">
 
-<div class="container" role="main" ng-controller="ParametersController" >
-<button type="button" ng-click="getPosts()" class="btn btn-lg btn-primary">get posts</button>
-<p>{{rows.data.length}}</p>
-<ul ng-if="rows">
-        <li ng-repeat="row in rows.data">
-            <dt>#{{row.id}}</dt>
-            <dd>#{{row.name}}</dd>
+<div class="row">
+    <div class="col-sm-10">
+        <h1>Параметри</h1>
+    </div>
+    <div class="col-sm-2">
+        <a class="btn pull-right"  ng-click="getParameters()">Оновити</a>
+        <a class="btn pull-right" ng-if="!$add" ng-click="$add=true">Додати</a>
+    </div>
+</div>
+
+
+<table ng-if="rows" class="table table-bordered">
+        <tr>
+            <th>#</th>
+            <th>Назва</th>
+            <th>Дії</th>
+        </tr>
+        <tr ng-if="!$add">
+            <th>---</th>
+            <th>---</th>
+            <th><a ng-if="$add" ng-click="addValue(row)"><i class="btn fa fa-floppy-o"></i></a></th>
+        </tr>
+        <tr ng-repeat="row in rows.data">
+            <td>{{row.id}}</td>
+            <td>
+                <div ng-if="!row.$edit">{{row.name}}</div>
+                <input ng-if="row.$edit" type="text" ng-model="row.name">
+            </td>
+            <td> 
+            <a ng-if="!row.$edit" ng-click="row.$edit=true"><i class="btn fa fa-pencil-square-o"></i></a>
+            <a ng-if="row.$edit" ng-click="saveParameter(row)"><i class="btn fa fa-floppy-o"></i></a>
+            <a ng-click="removeParameter(row)"><i class="btn fa fa-trash"></i></a>
+
             
-        </li>
-    </ul>
+        </tr>
+    </table>
 
 </div>
