@@ -21,13 +21,15 @@ $app->add(function ($req, $res, $next) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
+$app->post('/params', function ($request, $response, $args) {
+        $input = $request->getParsedBody();
+        $sql = "INSERT INTO `params` (`name`) VALUES ('" . $input['name'] . "');";
+        $params = DB::exec($sql);
+        return $this->response->true;
+    });
+
 $app->get('/params', function (Request $request, Response $response) {
     $params = DB::fetchAll('SELECT * FROM `params`');
-    // foreach ($params as &$p) {
-        // $measurements = DB::fetchAll('SELECT * FROM `measurements` WHERE id_param = ' . $p['id']);
-        // $p['measurements'] = $measurements;
-    // }
-    // unset($p);
     $response->getBody()->write(json_encode([
         'data' => $params
     ], JSON_UNESCAPED_UNICODE));
